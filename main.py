@@ -1,9 +1,22 @@
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 from app.admin import admin_bp
+from conf.config import config
+from conf.log import LogConfig
+import os
+# import sys
 app = Flask(__name__)
 
+# print(f"parameters: {sys.argv[1]}")
 app.register_blueprint(admin_bp)
+app.config.from_object(config[os.getenv("FLASK_CONFIG")])
+# config["default"]) # default production
+# [sys.argv[1]])
+# print("env FLASK_CONFIG: ", os.getenv("FLASK_CONFIG"))
+
+logger = LogConfig.get_logger(config["LOGGER_KEY"])
+logger.info("Initialize: Pascal interface API")
+
 
 api = Api(app)
 
